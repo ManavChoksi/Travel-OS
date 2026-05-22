@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Plane, Hotel, CreditCard, MapPin, Users, ArrowRight, ArrowLeft, Check, Star, Wallet, Globe, TrendingDown, Award, Zap, ChevronDown, ChevronUp, RotateCcw, Sparkles, Shield, Clock, AlertTriangle, IndianRupee } from "lucide-react";
 
 const FONTS = `
@@ -261,7 +261,7 @@ function TripDetails({form,set,next}){
       </div>
 
       <div className="dark-card fu fu3" style={{borderRadius:16,padding:28,marginBottom:28}}>
-        <Label>Total Trip Budget (₹)" sub="All-inclusive: flights, hotels, food, activities"/>
+        <Label sub="All-inclusive: flights, hotels, food, activities">Total Trip Budget (₹)</Label>
         <div style={{position:"relative"}}>
           <span style={{position:"absolute",left:14,top:"50%",transform:"translateY(-50%)",color:"rgba(201,149,42,0.7)",fontSize:16,fontWeight:500,fontFamily:"'DM Sans',sans-serif"}}>₹</span>
           <input className="input-field" type="number" placeholder="e.g. 300000" value={form.budget} onChange={e=>set("budget",e.target.value)} style={{paddingLeft:32}}/>
@@ -448,7 +448,7 @@ function PaymentArsenal({form,set,toggleArr,next,back,loading}){
 function Loading(){
   const msgs = ["Analysing your payment arsenal…","Calculating SmartBuy advantage…","Comparing booking strategies…","Crafting your personalised itinerary…"];
   const [i,setI] = useState(0);
-  useState(()=>{const t=setInterval(()=>setI(p=>(p+1)%msgs.length),2200);return()=>clearInterval(t);});
+  useEffect(()=>{const t=setInterval(()=>setI(p=>(p+1)%msgs.length),2200);return()=>clearInterval(t);},[]);
   return(
     <div style={{textAlign:"center",padding:"80px 20px"}}>
       <div style={{width:64,height:64,borderRadius:16,background:"rgba(201,149,42,0.1)",border:"1px solid rgba(201,149,42,0.25)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 24px"}}>
