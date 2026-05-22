@@ -825,20 +825,15 @@ Respond with ONLY valid JSON (no markdown, no code blocks, no explanation outsid
 Be specific to Indian market: mention INR amounts, specific SmartBuy URLs, real Indian credit card benefits, Air India partner routes, Taj/Oberoi vs international chains etc. Make cost estimates realistic for ${form.destination} in ${form.flightClass} class from ${form.origin} for ${form.adults+form.children} people ${nights} nights on ₹${form.budget} budget. Generate exactly ${Math.min(nights,7)} itinerary days.`;
 
     try{
-      const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
-      if(!apiKey) throw new Error("Missing VITE_ANTHROPIC_API_KEY");
-      const res=await fetch("https://api.anthropic.com/v1/messages",{
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      if(!apiKey) throw new Error("Missing VITE_GEMINI_API_KEY");
+      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,{
         method:"POST",
-        headers:{
-          "Content-Type":"application/json",
-          "x-api-key": apiKey,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true"
-        },
-        body:JSON.stringify({model:"claude-sonnet-4-5-20251001",max_tokens:4000,messages:[{role:"user",content:prompt}]})
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.7,maxOutputTokens:4000}})
       });
       const data=await res.json();
-      const text=data.content?.[0]?.text||"";
+      const text=data.candidates?.[0]?.content?.parts?.[0]?.text||"";
       const clean=text.replace(/```json\s*/gi,"").replace(/```\s*/gi,"").trim();
       const jsonStart=clean.indexOf("{");
       const jsonStr=jsonStart>=0?clean.substring(jsonStart):clean;
